@@ -53,7 +53,7 @@ Parameters::register_parameter(
 
 std::shared_ptr<ParameterLink<bool>> PhysicsWorld::visualizationPL =
 Parameters::register_parameter(
-                               "WORLD_PHYSICS-visualization", false, "false = no visualization, true = visualization is turned on");
+                               "WORLD_PHYSICS-visualization", false, "0 = no visualization, 1 = visualization is turned on");
 
 std::shared_ptr<ParameterLink<int>> PhysicsWorld::numberOfOutputsPL =
 Parameters::register_parameter("WORLD_PHYSICS-numberOfOutputs", 10,
@@ -532,7 +532,7 @@ void PhysicsWorld::evaluateSolo(std::shared_ptr<Organism> org, int analyze, int 
         //std::cout << "Brain: " << brain->readOutput(0) << ", " << brain->readOutput(1) << std::endl;
       }
       physicsWorld->step(false);
-      if(visualization && number%simulationSpeed == 0)
+      if(visualization && PhysicsWorld::visualizationPL->get(PT) && number%simulationSpeed == 0)
         globalviewer->frame();
       number++;
       //std::cout  << "POS: " <<physicsObject->getPositions()<< std::endl;
