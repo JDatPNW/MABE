@@ -1,0 +1,6 @@
+option(enable_World_twenty48 "Enable Module twenty48World" ON)
+if (enable_World_twenty48)
+  register_module(World twenty48)
+  target_sources(${EXE} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/twenty48World.cpp)
+  target_sources(${EXE} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/twenty48World.h)
+endif()

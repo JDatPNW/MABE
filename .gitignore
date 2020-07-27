@@ -5,6 +5,8 @@ modules.txt
 mbuild
 build/
 work/
+pop.csv
+max.csv
 
 # Ignore python's cache:
 __pycache__/

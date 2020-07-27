@@ -1,7 +1,8 @@
 % World
   - Logic16
+  * twenty48
+  - Test
   - BlockCatch
-  * Test
   - Berry
 
 % Genome
@@ -14,8 +15,8 @@
 
 % Brain
   - Wire
-  * CGP
-  - Markov
+  - CGP
+  * Markov
   - LSTM
   - BiLog
   - ANN
