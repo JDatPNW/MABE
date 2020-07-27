@@ -16,11 +16,12 @@
 #include <cstdlib>
 #include <thread>
 #include <vector>
+
+#include <osgViewer/Viewer>
+
 #include <dart/dart.hpp>
-//#include <dart/gui/gui.hpp> // GUI
 #include <dart/gui/osg/osg.hpp>
 #include <dart/utils/utils.hpp>
-#include <osgViewer/Viewer>
 
 class PhysicsWorld : public AbstractWorld {
 
@@ -66,7 +67,7 @@ public:
   dart::dynamics::BodyNode* makeRootBody(const dart::dynamics::SkeletonPtr& pendulum, const std::string& name);
   void setGeometry(const dart::dynamics::BodyNodePtr& bn);
   dart::dynamics::BodyNode* addBody(const dart::dynamics::SkeletonPtr& pendulum, dart::dynamics::BodyNode* parent, const std::string& name);
-  
+
   virtual std::unordered_map<std::string, std::unordered_set<std::string>>
   requiredGroups() override {
     return {{groupNamePL->get(PT),
@@ -77,4 +78,3 @@ public:
     // the brain must have 1 input, and the variable numberOfOutputs outputs
   }
 };
-
