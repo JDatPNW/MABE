@@ -314,22 +314,22 @@ void twenty48World::ClearScreen(){
 
 std::shared_ptr<ParameterLink<int> > twenty48World::modePL =
         Parameters::register_parameter(
-                "WORLD_TEST-mode", 0, "0 = bit outputs before adding, 1 = add outputs");
+                "WORLD_TWENTY48-mode", 0, "0 = bit outputs before adding, 1 = add outputs");
 std::shared_ptr<ParameterLink<int> > twenty48World::numberOfOutputsPL =
-        Parameters::register_parameter("WORLD_TEST-numberOfOutputs", 10,
+        Parameters::register_parameter("WORLD_TWENTY48-numberOfOutputs", 10,
                                        "number of outputs in this world");
 std::shared_ptr<ParameterLink<int> > twenty48World::evaluationsPerGenerationPL =
-        Parameters::register_parameter("WORLD_TEST-evaluationsPerGeneration", 1,
+        Parameters::register_parameter("WORLD_TWENTY48-evaluationsPerGeneration", 1,
                                        "Number of times to test each Genome per "
                                        "generation (useful with non-deterministic "
                                        "brains)");
 std::shared_ptr<ParameterLink<std::string> > twenty48World::groupNamePL =
-        Parameters::register_parameter("WORLD_TEST_NAMES-groupNameSpace",
+        Parameters::register_parameter("WORLD_TWENTY48_NAMES-groupNameSpace",
                                        (std::string) "root::",
                                        "namespace of group to be evaluated");
 std::shared_ptr<ParameterLink<std::string> > twenty48World::brainNamePL =
         Parameters::register_parameter(
-                "WORLD_TEST_NAMES-brainNameSpace", (std::string) "root::",
+                "WORLD_TWENTY48_NAMES-brainNameSpace", (std::string) "root::",
                 "namespace for parameters used to define brain");
 
 twenty48World::twenty48World(std::shared_ptr<ParametersTable> PT_)
