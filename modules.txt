@@ -1,9 +1,9 @@
 % World
   - Logic16
   * twenty48
-  - Test
+  * Test
   - BlockCatch
-  - Physics
+  * Physics
   - Berry
 
 % Genome
