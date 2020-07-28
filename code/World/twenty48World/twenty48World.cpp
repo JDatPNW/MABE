@@ -378,10 +378,6 @@ void twenty48World::evaluateSolo(std::shared_ptr<Organism> org, int analyze,
                         controls_b1 = brain->readOutput(0);
                         controls_b2 = brain->readOutput(1);
 
-                        //Debug - testing random vs brain
-                        controls_b1 = randomValue = Random::getInt((int)0, (int)1);
-                        controls_b2 = randomValue = Random::getInt((int)0, (int)1);
-
                         if(controls_b1 == 1 && controls_b2 == 1){
                           controls = 0; //up
                         }
