@@ -249,17 +249,17 @@ void PhysicsWorld::setupVisualization()
         dart::gui::osg::WorldNode * node = new dart::gui::osg::WorldNode(world);
         globalviewer = new dart::gui::osg::Viewer();
         globalviewer->addWorldNode(node);
-        globalviewer->setUpViewInWindow(0, 0, 640, 480);
-        globalviewer->realize();
-        globalviewer->getCameraManipulator()->setHomePosition(::osg::Vec3( 20.57,  30.14, 10.64),::osg::Vec3( 0.00,  0.00, 0.00),::osg::Vec3(-01.24, -01.25, 01.94));
-        globalviewer->setCameraManipulator(globalviewer->getCameraManipulator());
-        //osg::Vec3d eye( 1000.0, 1000.0, 100.0 );
-        //osg::Vec3d center( 0.0, 0.0, 0.0 );
-        //osg::Vec3d up( 0.0, 0.0, 10.0 );
-        //globalviewer->getCamera()->setViewMatrixAsLookAt( eye, center, up);
-        globalviewer->addEventHandler(new CustomEventHandler);
-
-        //}
+        if(visualization && PhysicsWorld::visualizationPL->get(PT)){
+          globalviewer->setUpViewInWindow(0, 0, 640, 480);
+          globalviewer->realize();
+          globalviewer->getCameraManipulator()->setHomePosition(::osg::Vec3( 20.57,  30.14, 10.64),::osg::Vec3( 0.00,  0.00, 0.00),::osg::Vec3(-01.24, -01.25, 01.94));
+          globalviewer->setCameraManipulator(globalviewer->getCameraManipulator());
+          //osg::Vec3d eye( 1000.0, 1000.0, 100.0 );
+          //osg::Vec3d center( 0.0, 0.0, 0.0 );
+          //osg::Vec3d up( 0.0, 0.0, 10.0 );
+          //globalviewer->getCamera()->setViewMatrixAsLookAt( eye, center, up);
+          globalviewer->addEventHandler(new CustomEventHandler);
+          }
 }
 
 void PhysicsWorld::setGeometry(const dart::dynamics::BodyNodePtr& bn)
