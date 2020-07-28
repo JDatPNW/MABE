@@ -14,7 +14,6 @@
 // Each correct '1' confers 1.0 point to score, or the decimal output determined
 // by 'mode'.
 #include "PhysicsWorld.h"
-//#include <stdlib.h>
 
 
 Eigen::Vector6d startPosition(Eigen::Vector6d::Zero());
@@ -117,69 +116,68 @@ PhysicsWorld::PhysicsWorld(std::shared_ptr<ParametersTable> PT_)
 
 class CustomEventHandler : public osgGA::GUIEventHandler
 {
-public:
+  public:
 
-CustomEventHandler(/*Pass in any necessary arguments*/)
-{
-        // Set up the customized event handler
-}
+  CustomEventHandler(/*Pass in any necessary arguments*/)
+  {
+          // Set up the customized event handler
+  }
 
-virtual bool handle(const osgGA::GUIEventAdapter& ea,
-                    osgGA::GUIActionAdapter&) override
-{
-        if(ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN)
-        {
-                if(ea.getKey() == 'q')
-                {
-                        visualization = !visualization;
-                        std::cout << "visualization is now " << visualization << "!" << std::endl;
-                        return true;
-                }
-                else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Left)
-                {
-                        if(simulationSpeed > 10)
-                                simulationSpeed -= 10;
-                        std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
+  virtual bool handle(const osgGA::GUIEventAdapter& ea,
+                      osgGA::GUIActionAdapter&) override
+  {
+          if(ea.getEventType() == osgGA::GUIEventAdapter::KEYDOWN)
+          {
+                  if(ea.getKey() == 'q')
+                  {
+                          visualization = !visualization;
+                          std::cout << "visualization is now " << visualization << "!" << std::endl;
+                          return true;
+                  }
+                  else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Left)
+                  {
+                          if(simulationSpeed > 10)
+                                  simulationSpeed -= 10;
+                          std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
 
-                        return true;
-                }
-                else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Up)
-                {
-                        simulationSpeed = 240;
-                        std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
+                          return true;
+                  }
+                  else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Up)
+                  {
+                          simulationSpeed = 240;
+                          std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
 
-                        return true;
-                }
-                else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Down)
-                {
-                        simulationSpeed = 10;
-                        std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
+                          return true;
+                  }
+                  else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Down)
+                  {
+                          simulationSpeed = 10;
+                          std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
 
-                        return true;
-                }
+                          return true;
+                  }
 
-                else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Right)
-                {
-                        if(simulationSpeed < 240)
-                                simulationSpeed += 10;
-                        std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
-                        return true;
-                }
+                  else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Right)
+                  {
+                          if(simulationSpeed < 240)
+                                  simulationSpeed += 10;
+                          std::cout << "visualization is now " << simulationSpeed << "!" << std::endl;
+                          return true;
+                  }
 
-                else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape)
-                {
-                        std::cout << "ESC key pressed" << std::endl;
-                        return true;
-                }
-        }
+                  else if(ea.getKey() == osgGA::GUIEventAdapter::KEY_Escape)
+                  {
+                          std::cout << "ESC key pressed" << std::endl;
+                          return true;
+                  }
+          }
 
-
-        // The return value should be 'true' if the input has been fully handled
-        // and should not be visible to any remaining event handlers. It should be
-        // false if the input has not been fully handled and should be viewed by
-        // any remaining event handlers.
-        return false;
-}
+          // The return value should be 'true' if the input has been fully handled
+          // and should not be visible to any remaining event handlers. It should be
+          // false if the input has not been fully handled and should be viewed by
+          // any remaining event handlers.
+          return false;
+  }
 
 };
 
@@ -192,10 +190,7 @@ dart::dynamics::SkeletonPtr PhysicsWorld::createGround()
         std::shared_ptr<BoxShape> shape = std::make_shared<BoxShape>(Eigen::Vector3d(default_ground_width, default_ground_width,default_wall_thickness));
         auto shapeNode  = bn->createShapeNodeWith<VisualAspect, CollisionAspect, DynamicsAspect>(shape);
         shapeNode->getVisualAspect()->setColor(dart::Color::Green());
-        //std::cout << "Ground NumBody: " << ground->getNumBodyNodes() << std::endl;
-        //std::cout << "Ground NumDof: " << ground->getNumDofs() << std::endl;
         ground->getBodyNode(0)->setFrictionCoeff(5);
-        //ground->getDof(0)->setCoulombFriction(5);
         return ground;
 }
 
@@ -218,12 +213,6 @@ dart::dynamics::SkeletonPtr PhysicsWorld::createWall()
         return wall;
 }
 
-/*void PhysicsWorld::applyForce(dart::dynamics::BodyNode* body, double x, double y){
-   Eigen::Vector3d force = (Eigen::Vector3d(x,y,0));
-   Eigen::Vector3d location(0, 0.0, 0);
-
-   body->addExtForce(force, location, false, true);
-   }*/
 void PhysicsWorld::applyForce(dart::dynamics::SkeletonPtr skel, std::vector<double> outputs)
 {
 
@@ -254,10 +243,6 @@ void PhysicsWorld::setupVisualization()
           globalviewer->realize();
           globalviewer->getCameraManipulator()->setHomePosition(::osg::Vec3( 20.57,  30.14, 10.64),::osg::Vec3( 0.00,  0.00, 0.00),::osg::Vec3(-01.24, -01.25, 01.94));
           globalviewer->setCameraManipulator(globalviewer->getCameraManipulator());
-          //osg::Vec3d eye( 1000.0, 1000.0, 100.0 );
-          //osg::Vec3d center( 0.0, 0.0, 0.0 );
-          //osg::Vec3d up( 0.0, 0.0, 10.0 );
-          //globalviewer->getCamera()->setViewMatrixAsLookAt( eye, center, up);
           globalviewer->addEventHandler(new CustomEventHandler);
           }
 }
@@ -266,8 +251,6 @@ void PhysicsWorld::setGeometry(const dart::dynamics::BodyNodePtr& bn)
 {
         using namespace dart::dynamics;
         using namespace dart::simulation;
-        // Create a BoxShape to be used for both visualization and collision checking
-        //std::shared_ptr<BoxShape> box(new BoxShape(Eigen::Vector3d(default_width, default_depth, jointLengthPL->get(PT))));
         std::shared_ptr<BoxShape> box(new BoxShape(Eigen::Vector3d(default_width, default_depth, jointLengthPL->get(PT))));
         // Create a shape node for visualization and collision checking
         auto shapeNode
@@ -296,17 +279,6 @@ dart::dynamics::BodyNode* PhysicsWorld::makeRootBody(const dart::dynamics::Skele
         properties.mDampingCoefficients = Eigen::Vector3d::Constant(default_damping);
 
         BodyNodePtr bn = pendulum->createJointAndBodyNodePair<FreeJoint>(nullptr, freeProperties, BodyNode::AspectProperties(name)).second;
-        /*
-           // Make a shape for the Joint
-           const double& R = default_width;
-           std::shared_ptr<EllipsoidShape> ball(
-           new EllipsoidShape(sqrt(2) * Eigen::Vector3d(R, R, R)));
-           auto shapeNode = bn->createShapeNodeWith<VisualAspect>(ball);
-           shapeNode->getVisualAspect()->setColor(dart::Color::Blue());
-
-           // Set the geometry of the Body
-           setGeometry(bn);
-         */
 
         // Make a shape for the Joint
         const double R = default_width / 2.0;
@@ -377,19 +349,6 @@ void PhysicsWorld::setupPhysics()
         world->setTime(0);
         world->setTimeStep(timeStepIntervalPL->get(PT)); //PHYSICS SPEED
 
-        //world->addSkeleton(pendulum);
-        //pendulum->setSelfCollisionCheck(true);
-
-
-
-        /*for(int i = 0; i < pendulum->getNumDofs(); i++)
-           {
-           std::cout << "Dof " << i;
-           std::cout << "CoulombFriction " << i << " " << pendulum->getDof(i)->getCoulombFriction() << std::endl;
-           std::cout << "Setting CoulombFriction on Dof " << i << " to " << 5 << std::endl;
-           pendulum->getDof(i)->setCoulombFriction(5);
-           }*/
-
         physicsWorld = world;
         setupCaterpillar();
 
@@ -400,16 +359,10 @@ void PhysicsWorld::setupCaterpillar()
 {
         using namespace dart::dynamics;
         using namespace dart::simulation;
-        //std::cout<<"TEST " << physicsWorld->getSkeleton("pendulum") << std::endl;
-        //std::cout<<"TEST " << physicsWorld->getNumSkeletons() << std::endl;
 
         if(physicsWorld->getSkeleton("pendulum") != NULL)
                 physicsWorld->removeSkeleton(pendulum);
 
-        //if(pendulum != NULL)
-        //pendulum = NULL;
-        //if(pbn != NULL)
-        //pbn = NULL;
         pendulum = Skeleton::create("pendulum");
         pbn = makeRootBody(pendulum, "body1");
         std::string bodyname = "body";
@@ -437,26 +390,12 @@ void PhysicsWorld::setupCaterpillar()
 
         for(int i = 0; i < pendulum->getNumBodyNodes(); i++)
         {
-                //std::cout << "BodyNode " << i << " " << pendulum->getBodyNode(i) << std::endl;
-                //std::cout << "FrictionCoef " << i << " " << pendulum->getBodyNode(i)->getFrictionCoeff() << std::endl;
-                //std::cout << "Setting Friction on BodyNode " << i << " to " << 5 << std::endl;
                 pendulum->getBodyNode(i)->setFrictionCoeff(5);
         }
 
         physicsWorld->addSkeleton(pendulum);
 
         physicsObject = pendulum;
-}
-
-
-void PhysicsWorld::morphBody()
-{
-        //physicsObject->getBodyNode(0)->getShapeNode(0)->setRelativeTransform();
-        //std::cout << "physicsObject->getBodyNode(0) " << physicsObject->getBodyNode(0)->getName() << std::endl;
-        //std::cout << "physicsObject->getBodyNode(0)->getShapeNode(0) " << physicsObject->getBodyNode(0)->getShapeNode(0)->getName() << std::endl;
-        //dart::dynamics::SkeletonPtr testpendulum;
-        //dart::dynamics::BodyNode* test pbn;
-
 }
 
 void PhysicsWorld::evaluate(std::map<std::string, std::shared_ptr<Group> > &groups, int analyze, int visualize, int debug) {
@@ -477,10 +416,7 @@ void PhysicsWorld::evaluateSolo(std::shared_ptr<Organism> org, int analyze, int 
         for (int r = 0; r < evaluationsPerGenerationPL->get(PT); r++) {
                 brain->resetBrain();
                 physicsWorld->step(true);
-                physicsWorld->reset(); //resets the counter
-                //setupCaterpillar();
-                //std::cout<< ".";
-                //physicsObject->setPositions(startPosition);
+                physicsWorld->reset();
                 for(int i=0; i < physicsObject->getNumDofs(); i++)
                 {
                         physicsObject->getDof(i)->setPosition(0);
@@ -494,15 +430,11 @@ void PhysicsWorld::evaluateSolo(std::shared_ptr<Organism> org, int analyze, int 
                 physicsObject->resetVelocities();
                 physicsObject->resetAccelerations();
 
-                //std::cout  << "POS 0: " <<physicsObject->getPositions()<< std::endl;
                 double oldTime = 0;
                 double END_TIME = simulationLengthPL->get(PT);
                 while (physicsWorld->getTime() < END_TIME) {
                         if(physicsWorld->getTime() - oldTime >= physicsInteractionIntervalPL->get(PT)) {
                                 brain->setInput(0, sin(physicsWorld->getTime()));
-                                /*for(int i=1; i<physicsObject->getNumJoints(); i++){
-                                   brain->setInput(i, physicsObject->getJoint(i)->getPosition(0));
-                                   }*/
                                 brain->update();
                                 brainOutputs.clear();
                                 for(int i=0; i<numberOfOutputsPL->get(PT); i++)
@@ -514,65 +446,38 @@ void PhysicsWorld::evaluateSolo(std::shared_ptr<Organism> org, int analyze, int 
                                 x=0;
                                 z=0;
                                 for(int i=0; i<physicsObject->getNumBodyNodes(); i++) {
-                                        //std::cout << "Joints: " << physicsObject->getNumJoints() << std::endl;
-                                        //std::cout << "Joint: " << i << " Positions: " << physicsObject->getJoint(i)->getPositions() << std::endl;
                                         x += physicsObject->getBodyNode(i)->getWorldTransform().translation()[0];
-                                        //std::cout << "BodyNode_" << i << " X: " << physicsObject->getBodyNode(i)->getWorldTransform().translation()[0] << std::endl;
                                         z += physicsObject->getBodyNode(i)->getWorldTransform().translation()[2];
                                 }
                                 x = x/physicsObject->getNumBodyNodes();
                                 z = z/physicsObject->getNumBodyNodes();
                                 org->dataMap.append("X", -x);
                                 org->dataMap.append("Z", z);
-                                //std::cout << "X: " << x << " Z: " << z << std::endl;
-
-                                //applyForce(physicsObject, brain->readOutput(0), brain->readOutput(1),brain->readOutput(2), brain->readOutput(3));
-                                //applyForce(physicsObject, -Random::getDouble(1.5, 2), -Random::getDouble(1.5, 2), -Random::getDouble(1.5, 2), -Random::getDouble(1.5, 2));
                                 oldTime = physicsWorld->getTime();
-                                //std::cout << "Brain: " << brain->readOutput(0) << ", " << brain->readOutput(1) << std::endl;
                         }
                         physicsWorld->step(false);
                         if(visualization && PhysicsWorld::visualizationPL->get(PT) && number%simulationSpeed == 0)
                                 globalviewer->frame();
                         number++;
-                        //std::cout  << "POS: " <<physicsObject->getPositions()<< std::endl;
                 }
 
                 double mean = 0;
                 for(int i=0; i<physicsObject->getNumBodyNodes(); i++) {
-                        //std::cout << "Joints: " << physicsObject->getNumJoints() << std::endl;
-                        //std::cout << "Joint: " << i << " Positions: " << physicsObject->getJoint(i)->getPositions() << std::endl;
                         mean += physicsObject->getBodyNode(i)->getWorldTransform().translation()[0];
                 }
                 mean = mean/physicsObject->getNumBodyNodes();
                 double score = -mean;
-                //double score = physicsObject->getPosition(5);
                 if (score < 0.0)
                         score =  0.0;
                 if (isnan(score))
                         score = 0.0;
                 double height = 0;
                 for(int i=0; i<physicsObject->getNumBodyNodes(); i++) {
-                        //std::cout << "Joints: " << physicsObject->getNumJoints() << std::endl;
-                        //std::cout << "Joint: " << i << " Positions: " << physicsObject->getJoint(i)->getPositions() << std::endl;
                         height += physicsObject->getBodyNode(i)->getWorldTransform().translation()[2];
                 }
                 height = height/physicsObject->getNumBodyNodes();
                 if(height > 3)
                         score = 0.0;
                 org->dataMap.append("score", score);
-
-                //morphBody();
-                //physicsWorld->removeSkeleton(pendulum);
-                //pbn = addBody(pendulum, pbn, "bodyname");
-                //physicsWorld->addSkeleton(pendulum);
-
-                //std::cout << "SCORE: " << score << std::endl;
-                //std::cout << "POS X: " << physicsObject->getPosition(3) << std::endl;
-                //std::cout << "POS Joint 0: " << physicsObject->getJoint(0)->getPosition(3) << std::endl;
-                //std::cout << "POS Y: " << physicsObject->getPosition(4) << std::endl;
-                //std::cout << "POS Z: " << physicsObject->getPosition(5) << std::endl;
-                //Eigen::Isometry3d test = physicsObject->getBodyNode(0)->getWorldTransform();
-                //std::cout << "Transform: " << test.translation()[0] << std::endl;
         }
 }
