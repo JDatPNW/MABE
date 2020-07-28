@@ -5,6 +5,7 @@ modules.txt
 mbuild
 build/
 work/
+results/
 pop.csv
 max.csv
 
