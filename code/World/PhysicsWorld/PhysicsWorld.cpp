@@ -56,7 +56,7 @@ std::shared_ptr<ParameterLink<bool> > PhysicsWorld::visualizationPL =
 
 std::shared_ptr<ParameterLink<int> > PhysicsWorld::numberOfOutputsPL =
         Parameters::register_parameter("WORLD_PHYSICS-numberOfOutputs", 10,
-                                       "number of outputs in this world");
+                                       "number of outputs in this world - Also equals the number of Joints and Bodyparts the organism will spawn with");
 
 std::shared_ptr<ParameterLink<double> > PhysicsWorld::jointLengthPL =
         Parameters::register_parameter("WORLD_PHYSICS-jointLength", 1.0,
