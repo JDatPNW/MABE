@@ -378,6 +378,10 @@ void twenty48World::evaluateSolo(std::shared_ptr<Organism> org, int analyze,
                         controls_b1 = brain->readOutput(0);
                         controls_b2 = brain->readOutput(1);
 
+                        //Debug - testing random vs brain
+                        controls_b1 = randomValue = Random::getInt((int)0, (int)1);
+                        controls_b2 = randomValue = Random::getInt((int)0, (int)1);
+
                         if(controls_b1 == 1 && controls_b2 == 1){
                           controls = 0; //up
                         }
@@ -417,11 +421,22 @@ void twenty48World::evaluateSolo(std::shared_ptr<Organism> org, int analyze,
                         }
                 }
 
+                int highestNum = 0;
+                for(int axis1=0; axis1<4; axis1++) {
+                        for(int axis2=0; axis2<4; axis2++) {
+                                if(board[axis1][axis2] > highestNum){
+                                  highestNum = board[axis1][axis2];
+                                }
+                        }
+                }
+
                 double brainScore = 0.0;
                 brainScore = score;
                 if (brainScore < 0.0)
                         brainScore = 0.0;
                 org->dataMap.append("score", brainScore);
+                org->dataMap.append("steps", step);
+                org->dataMap.append("higestNum", highestNum);
                 if(visualize)
                         std::cout << "organism with ID " << org->ID << " scored " << brainScore
                                   << std::endl;
