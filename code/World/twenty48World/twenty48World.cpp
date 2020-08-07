@@ -155,7 +155,7 @@ void twenty48World::move_left(){
                         if (n==board[i][j] && n!=0) {
                                 board[i][prev] = 2*n;
                                 board[i][j] = 0;
-                                score+=2*n;
+                                score+=2*n*n;
                                 n = 0;
                                 flag++;
                                 continue;
@@ -195,7 +195,7 @@ void twenty48World::move_right(){
                         if (n==board[i][j] && n!=0) {
                                 board[i][prev] = 2*n;
                                 board[i][j] = 0;
-                                score+=2*n;
+                                score+=2*n*n;
                                 n = 0;
                                 flag++;
                                 continue;
@@ -235,7 +235,7 @@ void twenty48World::move_up(){
                         if (n==board[j][i] && n!=0) {
                                 board[prev][i] = 2*n;
                                 board[j][i] = 0;
-                                score+=2*n;
+                                score+=2*n*n;
                                 n = 0;
                                 flag++;
                                 continue;
@@ -275,7 +275,7 @@ void twenty48World::move_down(){
                         if (n==board[j][i] && n!=0) {
                                 board[prev][i] = 2*n;
                                 board[j][i] = 0;
-                                score+=2*n;
+                                score+=2*n*n;
                                 n = 0;
                                 flag++;
                                 continue;
@@ -374,7 +374,6 @@ void twenty48World::evaluateSolo(std::shared_ptr<Organism> org, int analyze,
                                 }
                         }
                         brain->update();
-                        //controls = brain->readOutput(tick);
                         controls_b1 = brain->readOutput(0);
                         controls_b2 = brain->readOutput(1);
 
@@ -393,8 +392,9 @@ void twenty48World::evaluateSolo(std::shared_ptr<Organism> org, int analyze,
 
 
                         if(GameVisualize) {ClearScreen();}
-                        move = abs(controls*21)%4; //only Temp!!!
-                        //std::cout << move << "\n";
+
+                        move = controls;
+                        
                         switch (move) {
                         case 0:
                                 move_up();
