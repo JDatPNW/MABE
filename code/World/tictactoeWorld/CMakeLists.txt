@@ -1,0 +1,6 @@
+option(enable_World_tictactoe "Enable Module tictactoeWorld" ON)
+if (enable_World_tictactoe)
+  register_module(World tictactoe)
+  target_sources(${EXE} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/tictactoeWorld.cpp)
+  target_sources(${EXE} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/tictactoeWorld.h)
+endif()

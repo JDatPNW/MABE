@@ -1,5 +1,6 @@
 % World
   - Logic16
+  * tictactoe
   * twenty48
   * Test
   - BlockCatch
@@ -16,12 +17,12 @@
 
 % Brain
   - Wire
-  - CGP
+  * CGP
   * Markov
   - LSTM
   - BiLog
   - ANN
-  - Human
+  * Human
   - ConstantValues
 
 % Optimizer
