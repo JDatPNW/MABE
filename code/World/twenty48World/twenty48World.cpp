@@ -316,7 +316,7 @@ std::shared_ptr<ParameterLink<int> > twenty48World::modePL =
         Parameters::register_parameter(
                 "WORLD_TWENTY48-mode", 0, "0 = bit outputs before adding, 1 = add outputs");
 std::shared_ptr<ParameterLink<int> > twenty48World::numberOfOutputsPL =
-        Parameters::register_parameter("WORLD_TWENTY48-numberOfOutputs", 10,
+        Parameters::register_parameter("WORLD_TWENTY48-numberOfOutputs", 2,
                                        "number of outputs in this world");
 std::shared_ptr<ParameterLink<int> > twenty48World::evaluationsPerGenerationPL =
         Parameters::register_parameter("WORLD_TWENTY48-evaluationsPerGeneration", 1,
@@ -374,8 +374,8 @@ void twenty48World::evaluateSolo(std::shared_ptr<Organism> org, int analyze,
                                 }
                         }
                         brain->update();
-                        controls_b1 = brain->readOutput(0);
-                        controls_b2 = brain->readOutput(1);
+                        controls_b1 = Bit(brain->readOutput(0));
+                        controls_b2 = Bit(brain->readOutput(1));
 
                         if(controls_b1 == 1 && controls_b2 == 1){
                           controls = 0; //up
@@ -394,7 +394,7 @@ void twenty48World::evaluateSolo(std::shared_ptr<Organism> org, int analyze,
                         if(GameVisualize) {ClearScreen();}
 
                         move = controls;
-                        
+
                         switch (move) {
                         case 0:
                                 move_up();
