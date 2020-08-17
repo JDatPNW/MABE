@@ -19,3 +19,4 @@ Contributors to this project include<br>
 Initial Design and Managment: Arend Hintze<br>
 Development and Maintenance: Cliff Bohm<br>
 Other: Brian Goldman (parameter configuration, advice)<br>
+PhysicsWorld, twenty48World, tictactoeWorld: David Richter<br>
