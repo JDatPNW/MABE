@@ -32,20 +32,20 @@ void tictactoeWorld::checkWinner(int (&field)[3][3], int player, int &winner, in
         int counter = 0;
         for(int i=0; i<3; i++) {
                 if(field[i][0] == field[i][1] && field[i][1] == field[i][2] && field[i][0] != 5) {
-                        //std::cout << "WIN side\n";
+                        if(printField->get(PT)) { std::cout << "WIN side\n";} //DEBUG
                         winner = player;
                 }
                 if(field[0][i] == field[1][i] && field[1][i] == field[2][i] && field[0][i] != 5) {
-                        //std::cout << "WIN down\n";
+                        if(printField->get(PT)) { std::cout << "WIN down\n";} //DEBUG
                         winner = player;
                 }
         }
         if(field[0][0] == field[1][1] && field[1][1] == field[2][2] && field[0][0] != 5) {
-                //std::cout << "WIN dia down\n";
+                if(printField->get(PT)) { std::cout << "WIN dia down\n";} //DEBUG
                 winner = player;
         }
         if(field[2][0] == field[1][1] && field[1][1] == field[0][2] && field[2][0] != 5) {
-                //std::cout << "WIN dia up\n";
+                if(printField->get(PT)) { std::cout << "WIN dia up\n";} //DEBUG
                 winner = player;
         }
         for(int i=0; i<3; i++) {
@@ -69,6 +69,8 @@ void tictactoeWorld::markBox(int (&field)[3][3], int choice, int player, int(&sc
         else{
                 scores[player] = scores[player] - 1;
         }
+        if(printField->get(PT)) { std::cout << "Score0 : " << scores[0] << "\n";} //DEBUG
+        if(printField->get(PT)) { std::cout << "Score1 : " << scores[1] << "\n";} //DEBUG
 }
 
 void tictactoeWorld::drawField(int (&field)[3][3]){
@@ -102,6 +104,15 @@ std::shared_ptr<ParameterLink<std::string> > tictactoeWorld::brainNamePL =
                 "WORLD_TICTACTOE_NAMES-brainNameSpace", (std::string) "root::",
                 "namespace for parameters used to define brain");
 
+std::shared_ptr<ParameterLink<int> > tictactoeWorld::printField =
+        Parameters::register_parameter("WORLD_TICTACTOE-printField", 0,
+                                       "1 prints the field (DEBUG), 0 does not");
+
+std::shared_ptr<ParameterLink<int> > tictactoeWorld::extraPoinsForShortGame =
+        Parameters::register_parameter("WORLD_TICTACTOE-extraPoinsForShortGame", 0,
+                                       "1 gives a org more points if he wins more quickly"
+                                       ", 0 pretty much means the opposite");
+
 tictactoeWorld::tictactoeWorld(std::shared_ptr<ParametersTable> PT_)
         : AbstractWorld(PT_) {
 
@@ -125,83 +136,134 @@ void tictactoeWorld::evaluateSolo(std::shared_ptr<Organism> org1, std::shared_pt
                 int choice = 0;
                 int winner = -1;
                 int scores[2] = {0,0};
+                int brainScores[2] = {0,0};
                 int adjustedInput = 5;
+                int durationTotal = 0;
+                int durationFirst = 0;
+                int durationSecond = 0;
                 brain1->resetBrain();
                 brain2->resetBrain();
-                resetField(field);
-                //std::cout << "New Match\n";
-                //visualize = 1; //TODO REMOVE AFTER DEBUGGING
-                for(int i=0; i<steps; i++) {
-                        if(visualize) {drawField(field);}
-                        if(i%2 == 0) {
-                                for(int j = 0; j < 9; j++) {
-                                        adjustedInput = 5;
-                                        if(field[j/3][j%3] == 0)
-                                                adjustedInput = 0;
-                                        else if (field[j/3][j%3] == 1)
-                                                adjustedInput = 1;
-                                        brain1->setInput(j, adjustedInput);
+                if(printField->get(PT)) { std::cout << "New Match\n";} //DEBUG
+                if(printField->get(PT)) { visualize = 1;} //DEBUG
+                for(int turn = 0; turn<2; turn++) {
+                        resetField(field);
+                        scores[0] = 0;
+                        scores[1] = 0;
+                        winner = -1;
+                        for(int i=0; i<steps; i++) {
+                                if(turn == 0)
+                                        durationFirst++;
+                                else
+                                        durationSecond++;
+                                durationTotal++;
+
+                                if(visualize) {drawField(field);}
+                                if(i%2 == 0) {
+                                        for(int j = 0; j < 9; j++) {
+                                                adjustedInput = 5;
+                                                if(field[j/3][j%3] == 0)
+                                                        adjustedInput = 0;
+                                                else if (field[j/3][j%3] == 1)
+                                                        adjustedInput = 1;
+                                                if(turn == 0)
+                                                        brain1->setInput(j, adjustedInput);
+                                                else if(turn == 1)
+                                                        brain2->setInput(j, adjustedInput);
+
+                                        }
+                                        if(turn == 0) {
+                                                brain1->update();
+                                                choice = int(brain1->readOutput(0))%9;
+                                        }
+                                        else if(turn == 1) {
+                                                brain2->update();
+                                                choice = int(brain2->readOutput(0))%9;
+                                        }
+                                }
+                                else if(i%2 == 1) {
+                                        for(int j = 0; j < 9; j++) {
+                                                adjustedInput = 5;
+                                                if(field[j/3][j%3] == 0)
+                                                        adjustedInput = 1;
+                                                else if (field[j/3][j%3] == 1)
+                                                        adjustedInput = 0;
+                                                if(turn == 0)
+                                                        brain2->setInput(j, adjustedInput);
+                                                else if(turn == 1)
+                                                        brain1->setInput(j, adjustedInput);
+                                        }
+                                        if(turn == 0) {
+                                                brain2->update();
+                                                choice = int(brain2->readOutput(0))%9;
+                                        }
+                                        else if(turn == 1) {
+                                                brain1->update();
+                                                choice = int(brain1->readOutput(0))%9;
+                                        }
+                                }
+                                if(printField->get(PT)) {
+                                        std::cout << "Player: " << i%2 << " Choice: " << choice << "\n"; //DEBUG
+                                        std::cout << "Player: " << 0 << " Out: " << brain1->readOutput(0) << "\n"; //DEBUG
+                                        std::cout << "Player: " << 1 << " Out: " << brain2->readOutput(0) << "\n"; //DEBUG
                                 }
 
-                                brain1->update();
-                                choice = int(brain1->readOutput(0))%9;
+                                if(choice < 0 || choice > 8)
+                                        choice = 4;
+                                markBox(field, choice, i%2, scores);
+                                checkWinner(field, i%2, winner, scores);
+
+                                if(winner == 3) {
+                                        scores[0] = scores[0]  + (steps - (2 * int(i/2)));
+                                        scores[1] = scores[0];
+
+                                        if(visualize && printField->get(PT)) {
+                                                drawField(field);
+                                                std::cout << "Draw: Player " << 0 << " with " << scores[0] << " Points\n";
+                                                std::cout << "Draw: Player " << 1 << " with " << scores[1] << " Points\n";
+                                        }
+                                        break;
+                                }
+
+                                else if(winner != -1) {
+                                        if(extraPoinsForShortGame->get(PT))
+                                                scores[winner] = scores[winner]  + (steps - (2 * int(i/2)));
+                                        scores[winner] = scores[winner] * 2;
+
+                                        if(visualize && printField->get(PT)) {
+                                                drawField(field);
+                                                std::cout << "Winner: Player " << winner << " with " << scores[winner] << " Points\n";
+                                                std::cout << "Loser: Player " << !winner << " with " << scores[!winner] << " Points\n";
+                                        }
+                                        break;
+                                }
                         }
-                        else if(i%2 == 1) {
-                                for(int j = 0; j < 9; j++) {
-                                        adjustedInput = 5;
-                                        if(field[j/3][j%3] == 0)
-                                                adjustedInput = 1;
-                                        else if (field[j/3][j%3] == 1)
-                                                adjustedInput = 0;
-                                        brain2->setInput(j, adjustedInput);
-                                }
-
-                                brain2->update();
-                                choice = int(brain2->readOutput(0))%9;
+                        if(turn == 0) {
+                                brainScores[0] = brainScores[0] + scores[0];
+                                brainScores[1] = brainScores[1] + scores[1];
                         }
-
-                        //std::cout << "Player: " << i%2 << " Choice: " << choice << "\n";
-                        //std::cout << "Player: " << 0 << " Out: " << brain1->readOutput(0) << "\n";
-                        //std::cout << "Player: " << 1 << " Out: " << brain2->readOutput(0) << "\n";
-
-                        if(choice < 0 || choice > 8)
-                                choice = 4;
-                        markBox(field, choice, i%2, scores);
-                        checkWinner(field, i%2, winner, scores);
-
-                        if(winner == 3) {
-                                scores[0] = scores[0]  + (steps - (2 * int(i/2)));
-                                scores[1] = scores[0];
-
-                                if(visualize) {
-                                        drawField(field);
-                                        std::cout << "Draw: Player " << 0 << " with " << scores[0] << " Points\n";
-                                        std::cout << "Draw: Player " << 1 << " with " << scores[1] << " Points\n";
-                                }
-
-                                break;
+                        else if(turn == 1) {
+                                brainScores[0] = brainScores[0] + scores[1];
+                                brainScores[1] = brainScores[1] + scores[0];
                         }
-
-                        else if(winner != -1) {
-                                scores[winner] = scores[winner]  + (steps - (2 * int(i/2)));
-                                scores[winner] = scores[winner] * 2;
-
-                                if(visualize) {
-                                        drawField(field);
-                                        std::cout << "Winner: Player " << winner << " with " << scores[winner] << " Points\n";
-                                        std::cout << "Loser: Player " << !winner << " with " << scores[!winner] << " Points\n";
-                                }
-                                break;
+                        if(visualize && printField->get(PT)) {
+                                std::cout << "brainScore0: " << brainScores[0] << "\n"; //DEBUG
+                                std::cout << "brainScore1: " << brainScores[1] << "\n"; //DEBUG
                         }
                 }
-
-                org1->dataMap.append("score", scores[0]);
-                org2->dataMap.append("score", scores[1]);
+                org1->dataMap.append("score", brainScores[0]);
+                org2->dataMap.append("score", brainScores[1]);
                 org1->dataMap.append("Player", 0);
                 org2->dataMap.append("Player", 1);
+                org1->dataMap.append("durationTotal", durationTotal);
+                org2->dataMap.append("durationTotal", durationTotal);
+                org1->dataMap.append("durationFirst", durationFirst);
+                org2->dataMap.append("durationFirst", durationFirst);
+                org1->dataMap.append("durationSecond", durationSecond);
+                org2->dataMap.append("durationSecond", durationSecond);
+
                 if(visualize) {
-                        std::cout << "organism with ID " << org1->ID << " scored " << scores[0] << std::endl;
-                        std::cout << "organism with ID " << org2->ID << " scored " << scores[1] << std::endl;
+                        std::cout << "organism with ID " << org1->ID << " scored " << brainScores[0] << std::endl;
+                        std::cout << "organism with ID " << org2->ID << " scored " << brainScores[1] << std::endl;
                 }
         }
 }

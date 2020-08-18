@@ -50,6 +50,9 @@ public:
     requiredGroups() override;
 
 //tictactoe Code:--------------------------------------------------------------------
+static std::shared_ptr<ParameterLink<int>> printField;
+static std::shared_ptr<ParameterLink<int>> extraPoinsForShortGame;
+
 
 void resetField(int (&field)[3][3]);
 void checkWinner(int (&field)[3][3], int player, int &winner, int(&scores)[2]);
